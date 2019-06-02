@@ -1,8 +1,8 @@
 library('xlsx')
 pdf_file <- "2019-05-31-MA-IBN.pdf"
-treatment <- c("postive control", "DMSO", "6965", "7367")
 treatment <- c("DMSO", "MA_10nnM", "MA_100nM", "MA_1000nM")
- file1 <- "2019-05-31.xlsx"
+ file1 <- "2019-05-31MA.xlsx"
+conc <- as.factor( c(0,0.001,0.9375,1.875,3.75,7.5,15,30))
 
 
 x <- read.xlsx(file1, sheetName = "Sheet1")
@@ -19,7 +19,7 @@ x4$treatment <- treatment[4]
 colnames(x4) <- colnames(x1)
 
 y <-data.frame( rbind(x1,x2,x3,x4))
-y$con <-as.factor( c(0,0.46875,0.9375,1.875,3.75,7.5,15,30))
+y$con <- conc
 y$mean <- rowMeans(y[,1:3])
 
 y2 <- y[,1:3]
@@ -32,7 +32,7 @@ y
 
 y_total <- y
 
-for (i in 2:8 ) {
+for (i in 2:10 ) {
 x <-  read.xlsx(file1, sheetName = paste("Sheet",i, sep=''))
 
 
@@ -49,7 +49,7 @@ x4$treatment <- treatment[4]
 colnames(x4) <- colnames(x1)
 
 y <-data.frame( rbind(x1,x2,x3,x4))
-y$con <-as.factor( c(0,0.46875,0.9375,1.875,3.75,7.5,15,30))
+y$con <- conc
 y$mean <- rowMeans(y[,1:3])
 
 y2 <- y[,1:3]
