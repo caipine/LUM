@@ -5,7 +5,7 @@ treatment <- c("DMSO", "MA_10nnM", "MA_100nM", "MA_1000nM")
  file1 <- "2019-05-31.xlsx"
 
 
-x <- Sheet1
+x <- read.xlsx(file1, sheetName = "Sheet1")
 x1 <- x[1:8,2:4]
 x1$treatment <- treatment[1]
 x2 <- x[1:8,5:7]
