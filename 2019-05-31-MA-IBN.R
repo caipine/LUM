@@ -1,6 +1,7 @@
+setwd("Y:/WL/R")
 library('xlsx')
 pdf_file <- "2019-05-31-MA-IBN.pdf"
-treatment <- c("DMSO", "MA_10nnM", "MA_100nM", "MA_1000nM")
+treatment <- c("DMSO", "MA_10nnM", "PF_100nM", "PF_1000nM")
  file1 <- "2019-05-31MA.xlsx"
 conc <- as.factor( c(0,0.001,0.9375,1.875,3.75,7.5,15,30))
 
@@ -70,6 +71,18 @@ y_total
 library(ggplot2)
 pdf(pdf_file,width=20,height=10)
 ggplot(y_total,aes(x=con,y=mean,colour=treatment,group=treatment)) + 
+  geom_errorbar(aes(ymin=mean-SD, 
+                    ymax=mean+SD), width =.5)  +
+  geom_line(aes(y = mean, group = treatment))  +
+  xlab("Concentration") + 
+  ylab("LUM") + 
+  theme(strip.text = element_text(size=25)) +
+  facet_wrap( ~ cell , scales = "free_y", ncol = 4)
+dev.off()
+
+
+pdf(paste("line", pdf_file),width=20,height=10)
+ggplot(y_total,aes(x=con,y=mean,linetype=treatment,group=treatment)) + 
   geom_errorbar(aes(ymin=mean-SD, 
                     ymax=mean+SD), width =.5)  +
   geom_line(aes(y = mean, group = treatment))  +
