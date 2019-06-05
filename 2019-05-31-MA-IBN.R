@@ -1,7 +1,7 @@
 setwd("Y:/WL/R")
 library('xlsx')
 pdf_file <- "2019-05-31-MA-IBN.pdf"
-treatment <- c("DMSO", "PF_10nnM", "PF_100nM", "PF_1000nM")
+treatment <- c("DMSO", "MA_10nnM", "MA_100nM", "MA_1000nM")
  file1 <- "2019-05-31MA.xlsx"
 conc <- as.factor( c(0,0.001,0.9375,1.875,3.75,7.5,15,30))
 
