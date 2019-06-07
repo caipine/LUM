@@ -1,0 +1,109 @@
+library("flowCore")
+library(gridExtra)
+library(grid)
+library(ggplot2)
+library(lattice)
+
+   # n <- c(2, 3, 5)
+   # s <-  c(“aa”,  “bb”,  “cc”,  “dd”, “ee” )
+   # b <- c(TRUE,  FALSE,  TRUE,  FALSE,  FALSE )
+   # x <- list( n, s, b, 3)    # x contains copies of n, s, b
+cell <- "MINO"
+treatments <- c("DMSO" , "IBN_10uM", "PF_30uM", "IBN+PF") 
+files   <- c("Specimen1_A9_MINO DMSO.fcs", 
+             "Specimen1_A10_MINO IBN 10uM.fcs", 
+             "Specimen1_A11_MINO PF 30uM.fcs" , 
+             "Specimen1_A12_MINO com.fcs")
+par 
+for (i in 1:4) { 
+x <- read.FCS(files[i])
+summary(x)
+t <- data.frame(x@exprs)
+#plot(log10(y[i]$B530.H),log10(y[i]$B780.H))
+
+t$FITC.H <- log10(t$B530.H)
+t$PE.Cy7.H <- log10(t$B780.H)
+t$cell <- cell
+t$treatment <- treatments[i]
+head(t)      
+y[[i]] <- lapply(i, function(x) data.frame(t))
+
+
+} 
+  
+ pl <- lapply(1:4, function(.x) ( ggplot(data.frame(y[[.x]]), aes(x=FITC.H, y=PE.Cy7.H)) +
+                                    geom_point(size=0.05) +
+                                    xlab("FITC-H") + ylab("PE.Cy7.H") +
+                                    ggtitle(paste(cell, treatments[.x]))) )
+ml <- marrangeGrob(pl, nrow=2, ncol=2)
+ml 
+ 
+ 
+ 
+ 
+ > list.files()
+ [1] "csv"                             "Specimen1_A1_JKO DMSO.fcs"      
+ [3]   
+ [5]       "Specimen1_A2_JKO 10 IBN.fcs"    
+ [7] "Specimen1_A3_JKO 30 PF.fcs"      "Specimen1_A4_JKO com.fcs"       
+ [9] "Specimen1_A5_J-1.fcs"            "Specimen1_A6_Sample6.fcs"       
+[11] "Specimen1_A7_Sample7.fcs"        "Specimen1_A8_Sample8.fcs"       
+[13]       "Specimen1_B1_RecR.fcs"          
+[15] "Specimen1_B10_minor ibn10uM.fcs" "Specimen1_B11_minoR PF 30.fcs"  
+[17] "Specimen1_B12_minior com.fcs"    "Specimen1_B2_Sample14.fcs"      
+[19] "Specimen1_B3_Sample15.fcs"       "Specimen1_B4_Sample16.fcs"      
+[21] "Specimen1_B5_JVM2.fcs"           "Specimen1_B6_Sample18.fcs"      
+[23] "Specimen1_B7_Sample19.fcs"       "Specimen1_B8_Sample20.fcs"      
+[25] "Specimen1_B9_MINOR dmso.fcs"    
+
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+y$FITC.A <- log10(y$B530.A)
+y$PE.Cy7.A <- log10(y$B780.A)
+
+ggplot(y, aes(x=FITC.A, y=PE.Cy7.A)) +
+    geom_point(size=0.1) +
+     xlab("FITC") + ylab("Y") + ggtitle("MINO")
+     
+     
+ggplot(y, aes(x=FITC.A, y=FITC.H)) +
+    geom_point(size=0.1) +
+     xlab("FITC") + ylab("Y") + ggtitle("MINO")
+
+y$FSC.H <- log10(y[,1])
+y$SSC.H <- log10(y[,2])
+
+
+
+ggplot(y, aes(x=FSC.H, y=SSC.H)) +
+    geom_point(size=0.1) +
+     xlab("FITC") + ylab("Y") + ggtitle("MINO")
+
+
+$P1   FSC-H     <NA>    8667187        0    8667186
+$P2   SSC-H     <NA>    8230962        0    8230961
+$P3  B530-H   FITC-H    3162278     -111    3162277
+$P4  B780-H PE-Cy7-H    3162278     -111    3162277
+$P5  R675-H    APC-H     100000     -111      99999
+$P6   FSC-A     <NA>   16777216        0   16777215
+$P7   SSC-A     <NA>   11685246     -111   11685245
+$P8  B530-A   FITC-A    3162278     -111    3162277
+$P9  B780-A PE-Cy7-A   10000000     -111    9999999
+$P10 R675-A    APC-A     100000     -111      99999
+$P11  Width     <NA>        500        0        499
+$P12   Time     <NA> 4294967000        0 4294966999
