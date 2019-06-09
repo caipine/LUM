@@ -30,9 +30,12 @@ y[[i]] <- lapply(i, function(x) data.frame(t))
  pl <- lapply(1:4, function(.x) ( ggplot(data.frame(y[[.x]]), aes(x=FITC.H, y=PE.Cy7.H)) +
                                     geom_point(size=0.05) +
                                     xlab("FITC-H") + ylab("PE.Cy7.H") +
-                                    ggtitle(paste(cell, treatments[.x]))) )
-ml <- marrangeGrob(pl, nrow=2, ncol=2)
-ml 
+                                    xlim(0, 8) + ylim(0, 8) +
+                                    geom_hline(yintercept=4.5, colour="red", linetype="dashed") +
+                                    geom_vline(xintercept=4.5, colour="red", linetype="dashed") +
+                                     ggtitle(paste(cell, treatments[.x]))) )
+ marrangeGrob(pl, nrow=2, ncol=2)
+
 
 
 
@@ -72,16 +75,21 @@ n <- n+1
 } 
 
   
- pl <- lapply(1:24, function(.x) ( ggplot(data.frame(y[[.x]]), aes(x=FITC.H, y=PE.Cy7.H)) +
+ pl <- lapply(1:24, function(.x) (  ggplot(data.frame(y[[.x]]), aes(x=FITC.H, y=PE.Cy7.H)) +
                                     geom_point(size=0.05) +
+                                    geom_hline(yintercept=4.5, colour="red", linetype="dashed") +
+                                    geom_vline(xintercept=4.5, colour="red", linetype="dashed") +
                                     xlab("FITC-H") + ylab("PE.Cy7.H") +
-                                     ggtitle(paste(cells[if (.x%%4 == 0) {.x/4} else { as.integer(.x/4)+1}  ], 
-                                     treatments[if (.x%%4 == 0) {4} else {.x%%4} ]))))
+                                   	ggtitle(paste(cells[if (.x%%4 == 0) {.x/4} else { as.integer(.x/4)+1}  ],
+                                    treatments[if (.x%%4 == 0) {4} else {.x%%4} ]))))
+                                    legend(0.88,0.8,legend=c("A"),fill=c("red"),border = F)
+                                    
+                                    
  marrangeGrob(pl, nrow=2, ncol=2)
  
  for ( .x in 1:24) { print(paste(cells[if (.x%%4 == 0) {.x/4} else { as.integer(.x/4)+1}  ], treatments[if (.x%%4 == 0) {4} else {.x%%4} ]))}
 
- 
+                                     legend(0.88,0.8,legend=c("A"),fill=c("red"),border = F) ,
  
  
  
