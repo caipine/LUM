@@ -44,6 +44,7 @@ y[[i]] <- lapply(i, function(x) data.frame(t))
 
 
 
+
 ##############################
 library("flowCore")
 library(gridExtra)
@@ -74,23 +75,33 @@ y[[4*n+i]] <- lapply(i, function(x) data.frame(t))
 n <- n+1 
 } 
 
+nrow(y[[.x]](y[[.x]]$FITC.H > 4.5),]) 
+.x <- 1
+nrow(y[[.x]](y[[.x]]$FITC.H > 4.5),]) 
+
   
  pl <- lapply(1:24, function(.x) (  ggplot(data.frame(y[[.x]]), aes(x=FITC.H, y=PE.Cy7.H)) +
                                     geom_point(size=0.05) +
-                                    geom_hline(yintercept=4.5, colour="red", linetype="dashed") +
+                                   # geom_hline(yintercept=4.5, colour="red", linetype="dashed") +
                                     geom_vline(xintercept=4.5, colour="red", linetype="dashed") +
                                     xlab("FITC-H") + ylab("PE.Cy7.H") +
+                                    annotation_custom(grobTree(textGrob(nrow(data.frame(y[[.x]])[data.frame(y[[.x]])$FITC.H >4.5, ])/ nrow(data.frame(y[[.x]])), 
+                                            x=0.75,  y=0.95, hjust=0,  
+                                            gp=gpar(col="red", fontsize=13, fontface="italic")))   )+
                                    	ggtitle(paste(cells[if (.x%%4 == 0) {.x/4} else { as.integer(.x/4)+1}  ],
                                     treatments[if (.x%%4 == 0) {4} else {.x%%4} ]))))
-                                    legend(0.88,0.8,legend=c("A"),fill=c("red"),border = F)
-                                    
-                                    
+                                
  marrangeGrob(pl, nrow=2, ncol=2)
  
- for ( .x in 1:24) { print(paste(cells[if (.x%%4 == 0) {.x/4} else { as.integer(.x/4)+1}  ], treatments[if (.x%%4 == 0) {4} else {.x%%4} ]))}
-
-                                     legend(0.88,0.8,legend=c("A"),fill=c("red"),border = F) ,
+paste(round(nrow(data.frame(y[[.x]])[data.frame(y[[.x]])$FITC.H >4.5, ])/ nrow(data.frame(y[[.x]])),4)*100,"%", sep="")
+ .x <-1
+ round(nrow(data.frame(y[[.x]])[data.frame(y[[.x]])$FITC.H >4.5, ])/ nrow(data.frame(y[[.x]])),3)
  
+ annotation_custom(grobTree(textGrob(), 
+ 
+# for ( .x in 1:24) { print(paste(cells[if (.x%%4 == 0) {.x/4} else { as.integer(.x/4)+1}  ], treatments[if (.x%%4 == 0) {4} else {.x%%4} ]))}
+
+                      
  
  
 
