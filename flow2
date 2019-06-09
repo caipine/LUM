@@ -1,0 +1,67 @@
+library("flowCore")
+library(gridExtra)
+library(grid)
+library(ggplot2)
+library(lattice)
+
+files <- list.files()
+files2 <- files[c(1,5:12,2:4,13,17:24,14:16)]
+cells <- c("JKO","Jeko-1", "MINO", "RecR", "JvM2", "MinoR")
+treatments <- c("DMSO" , "IBN_10uM", "PF_30uM", "IBN+PF") 
+y <- list()
+n = 0
+for (cell in cells) {
+for (i in 1:4) { 
+x <- read.FCS(files2[4*n+i])
+summary(x)
+t <- data.frame(x@exprs)
+
+t$FITC.H <- log10(t$B530.H)
+t$PE.Cy7.H <- log10(t$B780.H)
+t$cell <- cell
+t$treatment <- treatments[i]
+head(t)      
+y[[4*n+i]] <- lapply(i, function(x) data.frame(t))
+
+}
+n <- n+1 
+} 
+
+nrow(y[[.x]](y[[.x]]$FITC.H > 4.5),]) 
+.x <- 1
+nrow(y[[.x]](y[[.x]]$FITC.H > 4.5),]) 
+
+  
+ pl <- lapply(1:24, function(.x) (  ggplot(data.frame(y[[.x]]), aes(x=FITC.H, y=PE.Cy7.H)) +
+                                    geom_point(size=0.05) +
+                                   # geom_hline(yintercept=4.5, colour="red", linetype="dashed") +
+                                    geom_vline(xintercept=4.5, colour="red", linetype="dashed") +
+                                    xlab("FITC-H") + ylab("PE.Cy7.H") +
+                                    annotation_custom(grobTree(textGrob(nrow(data.frame(y[[.x]])[data.frame(y[[.x]])$FITC.H >4.5, ])/ nrow(data.frame(y[[.x]])), 
+                                            x=0.75,  y=0.95, hjust=0,  
+                                            gp=gpar(col="red", fontsize=13, fontface="italic")))   )+
+                                   	ggtitle(paste(cells[if (.x%%4 == 0) {.x/4} else { as.integer(.x/4)+1}  ],
+                                    treatments[if (.x%%4 == 0) {4} else {.x%%4} ]))))
+                                    
+                                    
+a1 <- c()
+for (.x in 1:24){ 
+print(round(nrow(data.frame(y[[.x]])[data.frame(y[[.x]])$FITC.H >4.5, ])/ nrow(data.frame(y[[.x]])),4))
+a1 <- c(a1,round(nrow(data.frame(y[[.x]])[data.frame(y[[.x]])$FITC.H >4.5, ])/ nrow(data.frame(y[[.x]])),4))
+}                                    
+a1
+y2 <- data.frame(a1)
+
+a2 <- c()
+for (i in 1:6) { 
+  for (j in 1:4) {
+  a2 <- c(a2, cells[i])
+  }
+}
+
+y2$cells <- a2
+y2$treatment <- treatments
+ 
+ ggplot(y2, aes(x = factor(treatment, level = c("DMSO" , "IBN_10uM", "PF_30uM", "IBN+PF")), y = a1)) + 
+ geom_col()+  xlab("Treatment") + ylab("Apotosis") +
+ facet_wrap( ~ cells , scales = "free_y", nrow = NULL, ncol = 3)
