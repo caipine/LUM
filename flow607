@@ -1,0 +1,80 @@
+library("flowCore")
+library(gridExtra)
+library(grid)
+library(ggplot2)
+library(lattice)
+
+files2 <- list.files()
+#files2 <- files[c(1,5:12,2:4,13,17:24,14:16)]
+cells <- c("Jeko-1", "MINO", "RecR", "JvM2", "MinoR")
+gate <- c( 4.5, 4.5,4.5,4.5,4.5)
+treatments <- c("DMSO" , "PF_25nM", "PF_50uM", "PF_100nM", "IBN" , "IBN+PF_25nM", "IBN+PF_50uM", "IBN+PF_100nM") 
+
+
+y <- list()
+n = 0
+
+for (cell in cells) {  # cell number 
+for (i in 1:8) {   #  treatment
+x <- read.FCS(files2[8*n+i])
+summary(x)
+t <- data.frame(x@exprs)
+
+t$FITC.H <- log10(t$B530.H)
+t$PE.Cy7.H <- log10(t$B780.H)
+t$cell <- cell
+t$treatment <- treatments[i]
+head(t)      
+y[[8*n+i]] <- lapply(i, function(x) data.frame(t))   # treatment number
+
+}
+n <- n+1 
+} 
+
+#################################  
+ 
+ pl <- lapply(1:40, function(.x) (  ggplot(data.frame(y[[.x]]), aes(x=FITC.H, y=PE.Cy7.H)) +
+                                    geom_point(size=0.05) +
+                                   # geom_hline(yintercept=4.5, colour="red", linetype="dashed") +
+                                    #geom_vline(xintercept=4.5, colour="red", linetype="dashed") +
+                                    geom_vline(xintercept=gate[if (.x%%8 == 0) {.x/8} else { as.integer(.x/8)+1}], colour="red", linetype="dashed") +
+                                    xlab("FITC-H") + ylab("PE.Cy7.H") +
+                                    annotation_custom(grobTree(textGrob(paste(round(nrow(data.frame(y[[.x]])[data.frame(y[[.x]])$FITC.H >4.5, ])/ nrow(data.frame(y[[.x]])),4)*100,"%", sep=""), 
+                                            x=0.75,  y=0.95, hjust=0,  
+                                            gp=gpar(col="red", fontsize=13, fontface="italic")))   )+
+                                   	ggtitle(paste(cells[if (.x%%4 == 0) {.x/8} else { as.integer(.x/8)+1}  ],
+                                    treatments[if (.x%%8 == 0) {8} else {.x%%8} ]))))
+                             
+ marrangeGrob(pl, nrow=4, ncol=2)
+ 
+
+ 
+ ########################
+a1 <- c()
+for (.x in 1:40){ 
+print(.x)
+print (cells[if (.x%%4 == 0) {.x/4} else { as.integer(.x/4)+1}] )
+print (gate[if (.x%%4 == 0) {.x/4} else { as.integer(.x/4)+1}] )
+gateS<- gate[if (.x%%8 == 0) {.x/8} else { as.integer(.x/8)+1}]
+#print(round(nrow(data.frame(y[[.x]])[data.frame(y[[.x]])$FITC.H >gateS, ])/ nrow(data.frame(y[[.x]])),4))
+a1 <- c(a1,round(nrow(data.frame(y[[.x]])[data.frame(y[[.x]])$FITC.H >gateS, ])/ nrow(data.frame(y[[.x]])),4))
+
+}   
+
+a1
+y2 <- data.frame(a1)
+
+a2 <- c()
+for (i in 1:5) { 
+  for (j in 1:8) {
+  a2 <- c(a2, cells[i])
+  }
+}
+
+y2$cells <- a2
+y2$treatment <- treatments
+ 
+ ggplot(y2, aes(x = factor(treatment, level = c("DMSO" , "PF_25nM", "PF_50uM", "PF_100nM", "IBN" , "IBN+PF_25nM", "IBN+PF_50uM", "IBN+PF_100nM")), y = a1)) + 
+ geom_col()+  xlab("Treatment") + ylab("Apotosis") +
+ theme(strip.text = element_text(size=25)) +
+ facet_wrap( ~ cells , scales = "free_y", nrow = NULL, ncol = 3)
