@@ -48,7 +48,7 @@ x4$treatment <- treatment[4]
 colnames(x4) <- colnames(x1)
 
 y <-data.frame( rbind(x1,x2,x3,x4))
-y$con <-as.factor( c(0,0.46875,0.9375,1.875,3.75,7.5,15,30))
+y$con <-as.factor( c(0,0.06125,0.125,0.25,0.5,1,2,4))
 y$mean <- rowMeans(y[,1:3])
 
 y2 <- y[,1:3]
@@ -83,6 +83,21 @@ dev.off()
 
 pdf(paste("line", pdf_file),width=20,height=10)
 ggplot(y_total,aes(x=con,y=mean,linetype=treatment, group=treatment)) + 
+  geom_errorbar(aes(ymin=mean-SD, 
+                    ymax=mean+SD), width =.5)  +
+  geom_line(aes(y = mean, group = treatment))  +
+  xlab("Concentration") + 
+  ylab("LUM") + 
+  theme(strip.text = element_text(size=25)) +
+  facet_wrap( ~ cell , scales = "free_y", ncol = 4)
+dev.off()
+
+
+y2 <- y_total[y_total$treatment %in% c("DMSO", "PF_30uM"),]
+
+library(ggplot2)
+pdf(paste("color30", pdf_file),width=20,height=10)
+ggplot(y2,aes(x=con,y=mean,colour=treatment,group=treatment)) + 
   geom_errorbar(aes(ymin=mean-SD, 
                     ymax=mean+SD), width =.5)  +
   geom_line(aes(y = mean, group = treatment))  +
