@@ -91,3 +91,20 @@ ggplot(y_total,aes(x=con,y=mean,linetype=treatment, group=treatment)) +
   theme(strip.text = element_text(size=25)) +
   facet_wrap( ~ cell , scales = "free_y", ncol = 4)
 dev.off()
+
+
+
+y2 <- y_total[y_total$treatment %in% c("DMSO", "PF_30uM"),]
+
+library(ggplot2)
+pdf(paste("color30", pdf_file),width=20,height=10)
+ggplot(y2,aes(x=con,y=mean,colour=treatment,group=treatment)) + 
+  geom_errorbar(aes(ymin=mean-SD, 
+                    ymax=mean+SD), width =.5)  +
+  geom_line(aes(y = mean, group = treatment))  +
+  xlab("Concentration") + 
+  ylab("LUM") + 
+  theme(strip.text = element_text(size=25)) +
+  facet_wrap( ~ cell , scales = "free_y", ncol = 4)
+dev.off()
+
