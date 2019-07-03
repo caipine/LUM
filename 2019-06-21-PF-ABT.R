@@ -107,3 +107,17 @@ ggplot(y2,aes(x=con,y=mean,colour=treatment,group=treatment)) +
   facet_wrap( ~ cell , scales = "free_y", ncol = 4)
 dev.off()
 
+y3 <- y2[!y2$cell %in% c("Z138", "Maver"),]
+
+library(ggplot2)
+pdf(paste("color30less", pdf_file),width=20,height=10)
+ggplot(y3,aes(x=con,y=mean,colour=treatment,group=treatment)) + 
+  geom_errorbar(aes(ymin=mean-SD, 
+                    ymax=mean+SD), width =.5)  +
+  geom_line(aes(y = mean, group = treatment))  +
+  xlab("Concentration") + 
+  ylab("LUM") + 
+  theme(strip.text = element_text(size=25)) +
+  facet_wrap( ~ cell , scales = "free_y", ncol = 4)
+dev.off()
+
