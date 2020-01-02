@@ -3,7 +3,7 @@ library('xlsx')
 pdf_file <- "12-23-2019-211-20.pdf"
 file1 <-    "12-23-2019-211-20.xlsx"
 
-treatment <- c(181:210,"DMSO-1","DMSO-2")
+treatment <- c(211:240,"DMSO-1","DMSO-2")
 cells <- c("REC1", "Mino", "Z138", "Jeko1", "Jeko-BTK-KO", "Maver", "Mino-R", "Rec-R")
 #conc <-  c("20")
 
