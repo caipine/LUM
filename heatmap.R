@@ -397,10 +397,14 @@ y_total
  rownames(y271) <- treatment
  colnames(y271) <- cells
 
-dt <- rbind(y151[1:30,], y181[1:30,], y211[1:30,], y241[1:30,], y271[1:29,],)
+
+ dt <- as.matrix(rbind(y151[1:30,], y181[1:30,], y211[1:30,], y241[1:30,], y271[1:29,]))
+dt <- t(dt) 
 
 
-heatmap(dt, scale="column")
- 
+saveRDS(dt, file = "drug.20200109.rds")
+
+heatmap(dt)
+
  
  
