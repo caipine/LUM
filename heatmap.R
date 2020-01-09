@@ -408,3 +408,13 @@ heatmap(dt)
 
  
  
+
+dt <- readRDS("drug.20200109B.rds")
+dt[dt > 1]  =1
+pdf("151_299.pdf",width=40,height=10)
+heatmap.plus(dt, 
+           col=rev(morecols(50)),
+           trace="column", 
+           scale="row",
+           margins = c(10,20)) 
+dev.off()
