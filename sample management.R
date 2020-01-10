@@ -1,3 +1,4 @@
+library('xlsx')
 setwd("Y:/WL/R")
 file1 <- "Sample Box Map updated 20191220.xlsx"
 Col_ID <- c("X", "A", "B", "C", "D", "E", "F", "G", "H", "I")
@@ -69,14 +70,29 @@ x<-  read.xlsx(file2, sheetName = "Sheet1")
 xm <- x[,c(3,5:7)]
 
 xmx <- cbind(xm, z_total)
+xmx$SID <- 1:5589
 
 p1<-  read.xlsx("P_Information_updated_20200109.xlsx", sheetName = "AllSamples") 
 
 #p<-  read.xlsx("P_Information_updated_20200109.xlsx", sheetName = "Sheet3") 
-p<-  read.xlsx("ptinfo.xlsx", sheetName = "Sheet1") 
+#p<-  read.xlsx("ptinfo.xlsx", sheetName = "Sheet1") 
 
-p <- (p[,1:30]) 
+p <-  read.csv("ptinfo.csv") 
+p <- p[order(p$TID),]
+p1 <- p[duplicated(p$TID),]
 
+p2<-  p[p$TID %in% p1$TID,]
+p2[,1:20]
+#p <- (p[,1:30]) 
 test <- merge(xmx, p, by.x = "TID", by.y = "TID", all.x = TRUE)
 
-test2 <- merge(xmx, p, by.x = "MRN", by.y = "MRN", all.x = TRUE)
+#get sample failed merging
+restSID <- xmx$SID[(xmx$SID %in% test$SID == F)]
+restSID
+
+#find row
+rowID <- rownames(xmx)[(xmx$SID %in% restSID)]
+t1 <- xmx[rowID,]
+#not empty
+t2 <- t1[!is.na(t1$TID) | !is.na(t1$MRN),]
+
