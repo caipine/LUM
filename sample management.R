@@ -1,3 +1,5 @@
+setwd("Y:/WL/R")
+file1 <- "Sample Box Map updated 20191220.xlsx"
 Col_ID <- c("X", "A", "B", "C", "D", "E", "F", "G", "H", "I")
 x<-  read.xlsx(file1, sheetName = "plasma")
 x <- x[c(1:100,102:771),]
@@ -53,3 +55,28 @@ z_total <- rbind(z_total, z)
 
 }
 z_total
+
+
+
+###################################
+xlxs
+
+#setwd("Y:/WL/R")
+#library('xlsx')
+#pdf_file <- "12-16-2019-151-2.pdf"
+file2 <-    "2020-0110-s1.xlsx"
+x<-  read.xlsx(file2, sheetName = "Sheet1")
+xm <- x[,c(3,5:7)]
+
+xmx <- cbind(xm, z_total)
+
+p1<-  read.xlsx("P_Information_updated_20200109.xlsx", sheetName = "AllSamples") 
+
+#p<-  read.xlsx("P_Information_updated_20200109.xlsx", sheetName = "Sheet3") 
+p<-  read.xlsx("ptinfo.xlsx", sheetName = "Sheet1") 
+
+p <- (p[,1:30]) 
+
+test <- merge(xmx, p, by.x = "TID", by.y = "TID", all.x = TRUE)
+
+test2 <- merge(xmx, p, by.x = "MRN", by.y = "MRN", all.x = TRUE)
